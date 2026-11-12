@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Verification History{% endblock %}
+{% block content %}
+<h2>🕒 Verification history</h2>
+<div class="filters">
+  <a class="chip {{ 'chip-active' if not selected }}" href="{{ url_for('history') }}">All</a>
+  {% for f in filters %}
+    <a class="chip {{ 'chip-active' if selected == f }}" href="{{ url_for('history', result=f) }}">{{ f }}</a>
+  {% endfor %}
+</div>
+<section class="card">
+  {% if logs %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Time (UTC)</th><th>Result</th><th>Identity</th><th>Reason</th><th>Scanner IP</th></tr></thead>
+      <tbody>
+      {% for l in logs %}
+        <tr>
+          <td>{{ l.created_at }}</td>
+          <td><span class="badge badge-{{ l.result|lower }}">{{ l.result }}</span></td>
+          <td>{% if l.user_code %}{{ l.user_code }} ({{ l.user_name }}){% else %}<span class="muted">Unknown</span>{% endif %}</td>
+          <td>{{ l.reason }}</td><td>{{ l.ip_address }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p class="muted">No verifications recorded{% if selected %} for {{ selected }}{% endif %} yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

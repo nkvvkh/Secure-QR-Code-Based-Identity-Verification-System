@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Register User{% endblock %}
+{% block content %}
+<section class="card narrow">
+  <h2>➕ Register a user</h2>
+  {% if errors %}
+    <div class="flash flash-error"><ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul></div>
+  {% endif %}
+  <form method="post" action="{{ url_for('register') }}" novalidate>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="name">Full name</label>
+    <input id="name" name="name" type="text" maxlength="60" value="{{ form.get('name', '') }}" required>
+    <label for="user_id">User ID (unique)</label>
+    <input id="user_id" name="user_id" type="text" maxlength="32" pattern="[A-Za-z0-9_-]{3,32}" placeholder="e.g. CS2026-014" value="{{ form.get('user_id', '') }}" required>
+    <label for="department">Department</label>
+    <input id="department" name="department" type="text" maxlength="60" value="{{ form.get('department', '') }}" required>
+    <label for="expiry_date">Expiry date</label>
+    <input id="expiry_date" name="expiry_date" type="date" min="{{ min_date }}" value="{{ form.get('expiry_date', '') }}" required>
+    <button class="btn btn-block" type="submit">Register and generate QR code</button>
+  </form>
+</section>
+{% endblock %}

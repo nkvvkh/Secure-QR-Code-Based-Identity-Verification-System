@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}QR Code{% endblock %}
+{% block content %}
+<section class="card narrow center">
+  <h2>✅ {{ title }}</h2>
+  <img class="qr-image" src="{{ qr_image }}" alt="QR code for {{ user.user_id }}" width="300" height="300">
+  <div class="flash flash-warning">This QR code is shown <strong>only once</strong>. The server keeps just a hash of the token, so download it now. If it is lost, use "New QR" on the dashboard.</div>
+  <dl class="details">
+    <dt>Name</dt><dd>{{ user.name }}</dd>
+    <dt>User ID</dt><dd>{{ user.user_id }}</dd>
+    <dt>Department</dt><dd>{{ user.department }}</dd>
+    <dt>Expires</dt><dd>{{ user.expiry_date }}</dd>
+  </dl>
+  <div class="actions">
+    <a class="btn" href="{{ qr_image }}" download="qr-{{ user.user_id }}.png">⬇️ Download PNG</a>
+    <a class="btn btn-outline" href="{{ url_for('dashboard') }}">Back to dashboard</a>
+  </div>
+</section>
+{% endblock %}

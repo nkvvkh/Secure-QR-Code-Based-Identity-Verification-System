@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Verify QR{% endblock %}
+{% block content %}
+<h2>📷 Scan and verify</h2>
+<div id="verify-app" class="grid grid-2">
+  <section class="card">
+    <h3>Option 1: Webcam</h3>
+    <div class="video-box">
+      <video id="video" playsinline muted></video>
+      <canvas id="canvas" hidden></canvas>
+    </div>
+    <div class="actions">
+      <button id="start-camera" class="btn" type="button">Start camera</button>
+      <button id="stop-camera" class="btn btn-outline" type="button" disabled>Stop camera</button>
+    </div>
+    <p id="camera-status" class="muted">Camera is off. Your browser will ask for permission.</p>
+
+    <h3>Option 2: Upload a QR image</h3>
+    <input id="qr-file" type="file" accept="image/png,image/jpeg,image/webp">
+
+    <h3>Option 3: Paste QR text (for testing)</h3>
+    <textarea id="manual-text" rows="3" maxlength="200" placeholder="CNSQR1...."></textarea>
+    <button id="manual-verify" class="btn btn-outline" type="button">Verify text</button>
+  </section>
+
+  <section class="card">
+    <h3>Result</h3>
+    <div id="result" class="result result-idle" aria-live="polite">
+      <div id="result-badge" class="result-badge">WAITING</div>
+      <p id="result-message">Scan a QR code to see the result.</p>
+      <dl id="result-details" class="details" hidden></dl>
+    </div>
+  </section>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/jsQR.js') }}"></script>
+{% endblock %}

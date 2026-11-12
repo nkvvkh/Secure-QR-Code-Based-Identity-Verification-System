@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Secure QR Code-Based Identity Verification System</h1>
+  <p class="lead">Issue tamper-proof QR identity cards and check them in seconds. Each QR code holds only a random token and an HMAC-SHA256 signature. Names and other details stay in the server database.</p>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('verify') }}">📷 Scan a QR code</a>
+    <a class="btn btn-outline" href="{{ url_for('login') }}">🔐 Admin login</a>
+  </div>
+</section>
+
+<section class="grid grid-3">
+  <article class="card"><div class="icon">🎲</div><h3>Random tokens</h3><p>Every identity gets a 256-bit token from Python's <code>secrets</code> module. Only its SHA-256 hash is stored.</p></article>
+  <article class="card"><div class="icon">✍️</div><h3>HMAC-SHA256 signature</h3><p>The server signs each token with a secret key. Forged or edited QR codes fail a constant-time signature check.</p></article>
+  <article class="card"><div class="icon">🚫</div><h3>Instant revocation</h3><p>Admins can revoke an identity at any time. Expired and revoked QR codes are rejected on the server.</p></article>
+</section>
+
+<section class="card">
+  <h2>How it works</h2>
+  <ol class="steps">
+    <li>An admin registers a person: name, user ID, department and expiry date.</li>
+    <li>The server creates a random token, signs it, and shows a QR code that contains only the token and signature.</li>
+    <li>A verifier scans the QR code with a webcam or uploads an image of it.</li>
+    <li>The server checks the signature, finds the token in the database, then checks expiry and revocation.</li>
+    <li>The result is shown as <span class="badge badge-valid">VALID</span> <span class="badge badge-invalid">INVALID</span> <span class="badge badge-expired">EXPIRED</span> or <span class="badge badge-revoked">REVOKED</span>.</li>
+  </ol>
+</section>
+{% endblock %}

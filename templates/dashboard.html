@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h2>📊 Admin dashboard</h2>
+<section class="grid grid-5">
+  <div class="card stat"><span class="stat-num">{{ stats.total }}</span>Registered</div>
+  <div class="card stat"><span class="stat-num text-green">{{ stats.active }}</span>Active</div>
+  <div class="card stat"><span class="stat-num text-amber">{{ stats.expired }}</span>Expired</div>
+  <div class="card stat"><span class="stat-num text-magenta">{{ stats.revoked }}</span>Revoked</div>
+  <div class="card stat"><span class="stat-num text-blue">{{ stats.scans }}</span>Verifications</div>
+</section>
+
+<section class="card">
+  <div class="card-head">
+    <h3>Registered users</h3>
+    <a class="btn btn-small" href="{{ url_for('register') }}">➕ Register user</a>
+  </div>
+  {% if users %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>User ID</th><th>Name</th><th>Department</th><th>Expires</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+      {% for u in users %}
+        <tr>
+          <td>{{ u.user_id }}</td><td>{{ u.name }}</td><td>{{ u.department }}</td><td>{{ u.expiry_date }}</td>
+          <td><span class="badge badge-{{ u.effective_status|lower }}">{{ u.effective_status }}</span></td>
+          <td class="row-actions">
+            {% if u.effective_status == 'ACTIVE' %}
+            <form method="post" action="{{ url_for('regenerate', pk=u.id) }}" data-confirm="Issue a new QR code? The old QR code will stop working.">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-small btn-outline" type="submit">New QR</button>
+            </form>
+            <form method="post" action="{{ url_for('revoke', pk=u.id) }}" data-confirm="Revoke {{ u.user_id }}? This cannot be undone.">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-small btn-danger" type="submit">Revoke</button>
+            </form>
+            {% else %}<span class="muted">No actions</span>{% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p class="muted">No users yet. Register the first one to generate a QR code.</p>
+  {% endif %}
+</section>
+{% endblock %}
